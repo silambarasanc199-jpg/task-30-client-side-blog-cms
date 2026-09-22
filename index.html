@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>BlogCMS | Client-Side Blog Manager</title>
+
+    <meta
+        name="description"
+        content="A client-side blog CMS built with HTML, CSS and JavaScript."
+    >
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- ================= HEADER ================= -->
+
+    <header class="topbar">
+
+        <div class="brand">
+            <div class="brand-mark">&lt;/&gt;</div>
+
+            <div>
+                <h1>BlogCMS</h1>
+                <span>CLIENT-SIDE CONTENT MANAGER</span>
+            </div>
+        </div>
+
+        <div class="storage-status">
+            <span class="status-dot"></span>
+            <span>LOCAL STORAGE</span>
+        </div>
+
+    </header>
+
+
+    <!-- ================= MAIN ================= -->
+
+    <main class="container">
+
+        <!-- Page Heading -->
+
+        <section class="hero">
+
+            <div>
+                <p class="eyebrow">TASK 30 / WEB DEVELOPMENT</p>
+
+                <h2>
+                    Manage your
+                    <span>content.</span>
+                </h2>
+
+                <p class="hero-text">
+                    Create, edit, publish and organize your blog posts
+                    directly in your browser.
+                </p>
+            </div>
+
+            <button
+                class="primary-btn"
+                id="newPostBtn"
+                type="button"
+            >
+                <span>＋</span>
+                New Post
+            </button>
+
+        </section>
+
+
+        <!-- ================= STATS ================= -->
+
+        <section class="stats-grid">
+
+            <article class="stat-card">
+
+                <div class="stat-icon">◈</div>
+
+                <div>
+                    <span class="stat-label">TOTAL POSTS</span>
+                    <strong id="totalPosts">0</strong>
+                </div>
+
+            </article>
+
+
+            <article class="stat-card">
+
+                <div class="stat-icon">✓</div>
+
+                <div>
+                    <span class="stat-label">PUBLISHED</span>
+                    <strong id="publishedPosts">0</strong>
+                </div>
+
+            </article>
+
+
+            <article class="stat-card">
+
+                <div class="stat-icon">◷</div>
+
+                <div>
+                    <span class="stat-label">DRAFTS</span>
+                    <strong id="draftPosts">0</strong>
+                </div>
+
+            </article>
+
+        </section>
+
+
+        <!-- ================= TOOLBAR ================= -->
+
+        <section class="toolbar">
+
+            <div class="toolbar-title">
+                <span class="terminal-symbol">$_</span>
+                <span>POST DATABASE</span>
+            </div>
+
+
+            <div class="toolbar-controls">
+
+                <div class="search-box">
+
+                    <span>⌕</span>
+
+                    <input
+                        type="search"
+                        id="searchInput"
+                        placeholder="Search posts..."
+                        autocomplete="off"
+                    >
+
+                </div>
+
+
+                <select id="statusFilter">
+
+                    <option value="all">
+                        All Posts
+                    </option>
+
+                    <option value="published">
+                        Published
+                    </option>
+
+                    <option value="draft">
+                        Drafts
+                    </option>
+
+                </select>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= POST LIST ================= -->
+
+        <section class="posts-section">
+
+            <div
+                id="postsContainer"
+                class="posts-container"
+            >
+
+                <!--
+                    Posts are generated dynamically
+                    using JavaScript.
+                -->
+
+            </div>
+
+
+            <!-- Empty State -->
+
+            <div
+                id="emptyState"
+                class="empty-state"
+            >
+
+                <div class="empty-icon">
+                    +
+                </div>
+
+                <h3 id="emptyTitle">
+                    No posts yet
+                </h3>
+
+                <p id="emptyMessage">
+                    Create your first blog post to get started.
+                </p>
+
+                <button
+                    class="secondary-btn"
+                    id="emptyCreateBtn"
+                    type="button"
+                >
+                    Create First Post
+                </button>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- ================= EDITOR MODAL ================= -->
+
+    <div
+        id="editorModal"
+        class="modal hidden"
+        aria-hidden="true"
+    >
+
+        <div class="modal-backdrop"></div>
+
+
+        <div class="modal-card">
+
+            <!-- Modal Header -->
+
+            <div class="modal-header">
+
+                <div>
+
+                    <p class="eyebrow">
+                        CONTENT EDITOR
+                    </p>
+
+                    <h2 id="modalTitle">
+                        Create New Post
+                    </h2>
+
+                </div>
+
+
+                <button
+                    id="closeModalBtn"
+                    class="close-btn"
+                    type="button"
+                    aria-label="Close"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <!-- Editor Form -->
+
+            <form id="postForm">
+
+                <!-- Hidden ID -->
+
+                <input
+                    type="hidden"
+                    id="postId"
+                >
+
+
+                <!-- Title -->
+
+                <div class="form-group">
+
+                    <label for="postTitle">
+                        POST TITLE
+                    </label>
+
+                    <input
+                        type="text"
+                        id="postTitle"
+                        name="title"
+                        placeholder="Enter your post title"
+                        maxlength="120"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Excerpt -->
+
+                <div class="form-group">
+
+                    <label for="postExcerpt">
+                        SHORT DESCRIPTION
+                    </label>
+
+                    <textarea
+                        id="postExcerpt"
+                        name="excerpt"
+                        rows="3"
+                        maxlength="240"
+                        placeholder="Write a short description..."
+                    ></textarea>
+
+                </div>
+
+
+                <!-- Content -->
+
+                <div class="form-group">
+
+                    <label for="postContent">
+                        CONTENT
+                    </label>
+
+                    <textarea
+                        id="postContent"
+                        name="content"
+                        rows="10"
+                        placeholder="Write your blog content here..."
+                        required
+                    ></textarea>
+
+                </div>
+
+
+                <!-- Status -->
+
+                <div class="form-group">
+
+                    <label for="postStatus">
+                        POST STATUS
+                    </label>
+
+                    <select
+                        id="postStatus"
+                        name="status"
+                    >
+
+                        <option value="draft">
+                            Draft
+                        </option>
+
+                        <option value="published">
+                            Published
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- Preview -->
+
+                <div class="editor-preview">
+
+                    <div class="preview-label">
+                        LIVE CONTENT PREVIEW
+                    </div>
+
+                    <h3 id="previewTitle">
+                        Your title will appear here
+                    </h3>
+
+                    <p id="previewExcerpt">
+                        Your description will appear here.
+                    </p>
+
+                    <div
+                        id="previewContent"
+                        class="preview-content"
+                    >
+                        Your content will appear here.
+                    </div>
+
+                </div>
+
+
+                <!-- Form Actions -->
+
+                <div class="form-actions">
+
+                    <button
+                        type="button"
+                        class="cancel-btn"
+                        id="cancelBtn"
+                    >
+                        Cancel
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="primary-btn"
+                    >
+                        Save Post
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= VIEW POST MODAL ================= -->
+
+    <div
+        id="viewModal"
+        class="modal hidden"
+        aria-hidden="true"
+    >
+
+        <div class="modal-backdrop"></div>
+
+
+        <article class="view-card">
+
+            <button
+                id="closeViewBtn"
+                class="close-btn"
+                type="button"
+                aria-label="Close"
+            >
+                ×
+            </button>
+
+
+            <div class="view-meta">
+
+                <span
+                    id="viewStatus"
+                    class="status-badge"
+                >
+                    PUBLISHED
+                </span>
+
+                <span id="viewDate">
+                    —
+                </span>
+
+            </div>
+
+
+            <h2 id="viewTitle">
+                —
+            </h2>
+
+
+            <p
+                id="viewExcerpt"
+                class="view-excerpt"
+            >
+                —
+            </p>
+
+
+            <div
+                id="viewContent"
+                class="view-content"
+            >
+                —
+            </div>
+
+
+            <div class="view-footer">
+
+                <span id="viewId">
+                    ID: —
+                </span>
+
+                <button
+                    id="viewEditBtn"
+                    class="secondary-btn"
+                    type="button"
+                >
+                    Edit Post
+                </button>
+
+            </div>
+
+        </article>
+
+    </div>
+
+
+    <!-- ================= DELETE CONFIRMATION ================= -->
+
+    <div
+        id="deleteModal"
+        class="modal hidden"
+        aria-hidden="true"
+    >
+
+        <div class="modal-backdrop"></div>
+
+
+        <div class="confirm-card">
+
+            <div class="warning-icon">
+                !
+            </div>
+
+            <p class="eyebrow">
+                DELETE POST
+            </p>
+
+            <h2>
+                Are you sure?
+            </h2>
+
+            <p>
+                This action will permanently remove the post
+                from your browser storage.
+            </p>
+
+
+            <div class="form-actions">
+
+                <button
+                    type="button"
+                    class="cancel-btn"
+                    id="cancelDeleteBtn"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    type="button"
+                    class="delete-btn"
+                    id="confirmDeleteBtn"
+                >
+                    Delete Post
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= TOAST ================= -->
+
+    <div
+        id="toast"
+        class="toast"
+        role="status"
+        aria-live="polite"
+    >
+        <span id="toastMessage">
+            Saved successfully.
+        </span>
+    </div>
+
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer class="footer">
+
+        <div>
+            BLOGCMS / TASK 30
+        </div>
+
+        <div>
+            HTML5 • CSS3 • JAVASCRIPT • LOCALSTORAGE
+        </div>
+
+    </footer>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>
